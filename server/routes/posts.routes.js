@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authRequired } from "../middlewares/validateToken.js";
 import {
   getPosts,
   updatePost,
@@ -8,10 +9,10 @@ import {
 } from "../controllers/posts.controllers.js";
 const router = Router();
 
-router.get("/posts", getPosts);
-router.post("/posts", createPost);
-router.put("/posts/:id", updatePost);
-router.delete("/posts/:id", deletePost);
-router.get("/posts/:id", getPost);
+router.get("/posts", authRequired, getPosts);
+router.post("/posts", authRequired, createPost);
+router.put("/posts/:id", authRequired, updatePost);
+router.delete("/posts/:id", authRequired, deletePost);
+router.get("/posts/:id", authRequired, getPost);
 
 export default router;

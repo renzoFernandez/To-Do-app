@@ -3,8 +3,10 @@ import { uploadImage, deleteImage } from "../libs/cloudinary.js";
 import fs from "fs-extra";
 export const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find();
-    res.send(posts);
+    const posts = await Post.find({
+      user: req.user.id,
+    }).populate("user");
+    res.json(posts);
   } catch (error) {}
 };
 
@@ -18,7 +20,7 @@ export const createPost = async (req, res) => {
         public_id: req.body.public_id,
       };
     }
-    const newPost = new Post({ title, description, image });
+    const newPost = new Post({ title, description, image, user: req.user.id });
     await newPost.save();
     return res.json(newPost);
   } catch (error) {
@@ -52,7 +54,8 @@ export const updatePost = async (req, res) => {
 export const deletePost = async (req, res) => {
   try {
     const deletePost = await Post.findByIdAndDelete(req.params.id);
-    if (!deletePost) return res.sendStatus(404);
+    if (!deletePost)
+      return res.sendStatus(404).json({ message: "Post not found" });
     if (deletePost.image.public_id) {
       await deleteImage(deletePost.image.public_id);
     }
@@ -65,7 +68,7 @@ export const deletePost = async (req, res) => {
 export const getPost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.sendStatus(404);
+    if (!post) return res.status(404).json({ message: "Post not found" });
     res.json(post);
   } catch (error) {
     res.status(500).json({ message: error.message });
