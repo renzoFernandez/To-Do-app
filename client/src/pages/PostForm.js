@@ -4,6 +4,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 function PostForm() {
   const { createPost, getPost, updatePost } = usePost();
@@ -20,16 +21,20 @@ function PostForm() {
       if (params.id) {
         const post = await getPost(params.id);
         setPost(post.data);
+        console.log("use");
       }
     })();
-  });
+  }, []);
 
   return (
     <div className="flex items-center justify-center ">
       <div className="bg-zinc-800 p-10 shadow-md shadow-black">
         <header className="flex justify-between py-4 text-white">
           <h3 className="text-xl">New Post</h3>
-          <Link to="/" className="text-gray-400 text-sm hover:text-gray-300">
+          <Link
+            to="/posts"
+            className="text-gray-400 text-sm hover:text-gray-300"
+          >
             Go Back
           </Link>
         </header>
@@ -47,7 +52,7 @@ function PostForm() {
               await createPost(values);
             }
             actions.setSubmitting(false);
-            navigate("/");
+            navigate("/posts");
           }}
           enableReinitialize={true}
         >
@@ -110,17 +115,34 @@ function PostForm() {
                   alt="Girl in a jacket"
                 />
               )}
-              <button
-                className=" bg-green-900 text-white font-bold py-2 px-4 rounded-full  mt-2 hover:bg-green-700 "
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <AiOutlineLoading3Quarters className="animate-spin h-5 w-54" />
-                ) : (
-                  "Save!"
+              <div className="flex justify-between">
+                <button
+                  className=" bg-green-900 text-white font-bold py-2 px-4 rounded-full  mt-2 hover:bg-green-700 "
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <AiOutlineLoading3Quarters className="animate-spin h-5 w-54" />
+                  ) : (
+                    "Save!"
+                  )}
+                </button>
+                {post.image && (
+                  <button
+                    className="bg-red-700 text- hover:bg-red-500 text-sm px-2 mb-5 rounded-sm "
+                    type="button"
+                    onClick={() => {
+                      console.log("presionado");
+                      setPost({
+                        ...post,
+                        image: null,
+                      });
+                    }}
+                  >
+                    <AiTwotoneDelete />
+                  </button>
                 )}
-              </button>
+              </div>
             </Form>
           )}
         </Formik>

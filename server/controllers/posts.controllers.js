@@ -31,7 +31,7 @@ export const createPost = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   try {
-    let image;
+    let image = null;
     if (req.body.url && req.body.public_id) {
       image = {
         url: req.body.url,
