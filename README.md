@@ -19,6 +19,7 @@
   <li>Dentro de /server crear el archivo .env con sus credenciales como se muestra acontinuacion...</li>
 </ol>
 MONGODB_URI = urlMONGODB
+TOKEN_SECRET = 'TOKEN_SECRET'
 
 <h3>EJECUTAR LOCAL</h3>
 -FrontEnd :Dentro /client<br>
